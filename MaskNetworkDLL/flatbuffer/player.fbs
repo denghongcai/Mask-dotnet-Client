@@ -1,0 +1,18 @@
+namespace MaskGame.Protocol.Schema.Object;
+enum Color:byte {Red = 0, Green, Blue = 2}
+
+struct Vec3 {
+x:float;
+y:float;
+z:float;
+}
+
+table Player {
+pos:Vec3; // Struct.
+mana:short = 150;
+hp:short = 100;
+name:string;
+friendly:bool = false;
+color:Color = Blue; // Enum.
+}
+root_type Player;
