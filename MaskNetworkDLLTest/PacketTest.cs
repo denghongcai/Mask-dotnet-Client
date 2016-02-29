@@ -12,10 +12,11 @@ namespace MaskNetworkDLLTest
         [TestMethod]
         public void TestPackUnpack()
         {
-            var packet = new Packet("test", new byte[] { 0x20, 0x20, 0x20, 0x20, 0x40, 0x50 });
+            var packet = new Packet(new Payload(Payload.Types.RAW, "test", new byte[2] { 0x00, 0x11 }));
             var unpacket = new Packet(packet.PDU);
-            Assert.AreEqual<string>(packet.FullName, unpacket.FullName);
-            CollectionAssert.AreEqual(packet.Data, unpacket.Data);
+            Assert.AreEqual(packet.Payload.FullName, unpacket.Payload.FullName);
+            Assert.AreEqual(packet.Payload.Type, unpacket.Payload.Type);
+            CollectionAssert.AreEqual(packet.Payload.Data, unpacket.Payload.Data);
         }
     }
 }
