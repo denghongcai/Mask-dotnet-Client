@@ -7,28 +7,37 @@ namespace MaskGame.Queue
     {
         private readonly static EventQueue instance = new EventQueue();
 
-        private Queue<object> eventQueue = new Queue<object>();
+        private Queue<EventArgs> eventQueue = new Queue<EventArgs>();
 
         public static EventQueue GetInstance()
         {
             return instance;
         }
 
-        public void Enqueue(object obj)
+        public void Enqueue(EventArgs obj)
         {
-            eventQueue.Enqueue(obj); 
+            lock(eventQueue)
+            {
+                eventQueue.Enqueue(obj);
+            }
         }
 
-        public object Dequeue()
+        public EventArgs Dequeue()
         {
-            return eventQueue.Dequeue(); 
+            lock(eventQueue)
+            {
+                return eventQueue.Dequeue();
+            }
         }
 
         public int Count
         {
             get
             {
-                return eventQueue.Count();
+                lock(eventQueue)
+                {
+                    return eventQueue.Count();
+                }
             }
         }
     }

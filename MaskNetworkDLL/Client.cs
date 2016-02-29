@@ -12,17 +12,13 @@ namespace MaskGame
 {
     public class Client
     {
-        public delegate void EventHandlerDelegate(EventArgs eventArgs);
-
-        public EventHandlerDelegate EventHandler = null;
-
         public delegate void ReadPacketHandlerDelegate(Packet packet);
 
         public ReadPacketHandlerDelegate ReadPacketHandler = null;
 
         private string hostName;
 
-        private int port = 1430;
+        private int port = 1430; // default port
 
         private volatile bool shouldStop = false;
 
@@ -37,12 +33,14 @@ namespace MaskGame
         public Client(string hostname)
         {
             this.hostName = hostname;
+            InitEventHandler();
         }
 
         public Client(string hostname, int port)
         {
             this.hostName = hostname;
             this.port = port;
+            InitEventHandler();
         }
 
         private void InitEventHandler()
@@ -50,10 +48,7 @@ namespace MaskGame
             ReadPacketHandler = (packet) =>
             {
                 EventArgs eventArgs = Event.GetArgsFromPacket(packet);
-                if (EventHandler != null)
-                {
-                    EventHandler(eventArgs);
-                }
+                EventQueue.GetInstance().Enqueue(eventArgs);
             };
         }
 
@@ -63,8 +58,12 @@ namespace MaskGame
 
             try
             {
-                IPHostEntry ipHostInfo = Dns.GetHostEntry(hostName);
-                IPAddress ipAddress = ipHostInfo.AddressList[0];
+                IPAddress ipAddress;
+                if(!IPAddress.TryParse(hostName, out ipAddress))
+                {
+                    IPHostEntry ipHostInfo = Dns.GetHostEntry(hostName);
+                    ipAddress = ipHostInfo.AddressList[0];
+                }
                 IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
                 socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 try
@@ -156,7 +155,11 @@ namespace MaskGame
             {
                 try
                 {
-                    write(writeQueue.Dequeue().PDU);
+                    var packet = writeQueue.Dequeue();
+                    if(packet != null)
+                    {
+                        write(packet.PDU);
+                    }
                 }
                 catch (InvalidOperationException ie)
                 {

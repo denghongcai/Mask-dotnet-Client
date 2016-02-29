@@ -1,21 +1,62 @@
 ﻿using System;
 using MaskGame.Protocol;
 using System.Linq;
-using System.Reflection;
+using FlatBuffers;
+using MaskGame.Queue;
 
 namespace MaskGame
 {
     public class EventArgs
     {
-        public EventArgs(string fullName, string name, object payload)
+        public EventArgs(string fullName, object payload)
         {
-            this.FullName = fullName;
-            this.Name = name;
-            this.Payload = payload;
+            FullName = fullName;
+            Payload = payload;
         }
-        public string FullName { get; private set; }
-        public string Name { get; private set; } // FQDN
+
+        public EventArgs(string fullName, string shortid, object payload)
+        {
+            ShortId = shortid;
+            FullName = fullName;
+            Payload = payload;
+        }
+
+        public string ShortId { get; private set; }
+        public string FullName { get; private set; } // FQN
+        public string Name
+        {
+            get
+            {
+                return FullName.Split('.').Last();
+            }
+        }
         public object Payload { get; private set; }
+    }
+
+    public class EventWatcher
+    {
+        public readonly static EventWatcher instance = new EventWatcher();
+
+        public static EventWatcher GetInstance()
+        {
+            return instance;
+        }
+
+        public delegate void EventHandlerDelegate(EventArgs eventArgs);
+
+        public EventHandlerDelegate EventHandler = null;
+
+        public void Loop()
+        {
+            while (EventQueue.GetInstance().Count != 0)
+            {
+                var ev = EventQueue.GetInstance().Dequeue();
+                if(EventHandler != null)
+                {
+                    EventHandler(ev); 
+                }
+            }
+        }
     }
 
     public class Event
@@ -24,10 +65,10 @@ namespace MaskGame
         {
             Type type = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(t => t.GetTypes())
-                .Where(t => t.IsClass && t.FullName == packet.FullName)
+                .Where(t => t.IsClass && t.FullName == packet.Payload.FullName)
                 .Single();
-            object payload = type.GetMethod("GetRootAs" + type.Name, BindingFlags.Public | BindingFlags.Static).Invoke(null, new object[]{ packet.Data});
-            return new EventArgs(type.FullName, type.Name, payload);
+            object payload = type.GetMethod("GetRootAs" + type.Name, new Type[] { typeof(ByteBuffer)}).Invoke(null, new object[]{ new ByteBuffer(packet.Payload.Data)});
+            return new EventArgs(type.FullName, packet.ShortId, payload);
         }
     }
 }

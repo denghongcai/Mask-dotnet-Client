@@ -1,6 +1,6 @@
 // automatically generated, do not modify
 
-namespace MaskGame.Queue.Protocol.Schema.Object
+namespace MaskGame.Protocol.Schema.Object
 {
 
 public enum Color : sbyte
