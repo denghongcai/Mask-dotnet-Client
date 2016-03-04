@@ -1,0 +1,7 @@
+namespace MaskGame.Protocol.Schema.Object.Auth;
+
+table Response {
+code: int;
+error: string;
+}
+root_type Response;

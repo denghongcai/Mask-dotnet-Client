@@ -10,7 +10,7 @@ namespace MaskGame.Protocol
     public class Packet
     {
         const uint MAX_PACKET_LENGTH = 1 << 20;
-        const int MAX_SHORTID_LENGTH = 16; // including '\0' 
+        const int MAX_SHORTID_LENGTH = 16;
 
         private BitArray ext = new BitArray(new byte[2] { 0x00, 0x00 }); // protocol ext
 
@@ -27,7 +27,7 @@ namespace MaskGame.Protocol
         }
 
         public UInt32 Timestamp; // seconds
-        private string shortId = "";
+        private string shortId = Util.ShortId.NewString();
         public string ShortId
         {
             get
@@ -36,7 +36,7 @@ namespace MaskGame.Protocol
             }
             set
             {
-                if(value.Length > MAX_SHORTID_LENGTH - 1)
+                if(value.Length > MAX_SHORTID_LENGTH)
                 {
                     throw new ArgumentException();
                 }

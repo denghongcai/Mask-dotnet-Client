@@ -1,0 +1,7 @@
+namespace MaskGame.Protocol.Schema.Object.Auth;
+
+table Request {
+nickname:string;
+}
+
+root_type Request;

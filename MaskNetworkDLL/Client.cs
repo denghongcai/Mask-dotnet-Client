@@ -12,6 +12,15 @@ namespace MaskGame
 {
     public class Client
     {
+        const int MAX_RETRY_TIMES = 5;
+
+        private readonly static Client instance = new Client();
+
+        public static Client GetInstance()
+        {
+            return instance;
+        }
+
         public delegate void ReadPacketHandlerDelegate(Packet packet);
 
         public ReadPacketHandlerDelegate ReadPacketHandler = null;
@@ -20,7 +29,7 @@ namespace MaskGame
 
         private int port = 1430; // default port
 
-        private volatile bool shouldStop = false;
+        private bool shouldStop = false;
 
         private volatile Socket socket;
 
@@ -28,18 +37,12 @@ namespace MaskGame
 
         private BlockingQueue<Packet> writeQueue = new BlockingQueue<Packet>();
 
-        private volatile bool disconnected = false;
+        private bool disconnected = true;
 
-        public Client(string hostname)
-        {
-            this.hostName = hostname;
-            InitEventHandler();
-        }
+        private int connectRetryTimes = 0;
 
-        public Client(string hostname, int port)
+        public Client()
         {
-            this.hostName = hostname;
-            this.port = port;
             InitEventHandler();
         }
 
@@ -47,15 +50,33 @@ namespace MaskGame
         {
             ReadPacketHandler = (packet) =>
             {
-                EventArgs eventArgs = Event.GetArgsFromPacket(packet);
-                EventQueue.GetInstance().Enqueue(eventArgs);
+                switch(packet.Payload.Type)
+                {
+                    case Payload.Types.RAW:
+                        Event.PacketHandler(packet);
+                        break;
+                    case Payload.Types.RPC:
+                        RPC.Watcher.PacketHandler(packet);
+                        break;
+                }
             };
         }
 
         public void Connect()
         {
-            if (hostName == null || disconnected == true) return;
+            if (hostName == null) return;
+            Connect(hostName, port);
+        }
 
+        public void Connect(string hostName)
+        {
+            Connect(hostName, port);
+        }
+
+        public void Connect(string hostName, int port)
+        {
+            this.hostName = hostName;
+            this.port = port;
             try
             {
                 IPAddress ipAddress;
@@ -69,20 +90,18 @@ namespace MaskGame
                 try
                 {
                     socket.Connect(remoteEP);
+                    disconnected = false;
                     Debug.Log("socket connected to " + hostName + ":" + port);
-                }
-                catch (ArgumentNullException ane)
-                {
-                    Debug.LogError("ArgumentNullException : " + ane.ToString());
-                }
-                catch (SocketException se)
-                {
-                    Debug.LogError("SocketException : " + se.ToString());
                 }
                 catch (System.Exception e)
                 {
                     Debug.LogError("Unexpected exception : " + e.ToString());
+                    throw new ConnectException();
                 }
+            }
+            catch (ConnectException ce)
+            {
+                throw ce;
             }
             catch (System.Exception e)
             {
@@ -92,8 +111,10 @@ namespace MaskGame
 
         public void Reconnect()
         {
-            disconnected = false;
-            Connect();
+            if(disconnected == false)
+            {
+                Connect();
+            }
         }
 
         public void BeginReadPacket()
@@ -213,7 +234,6 @@ namespace MaskGame
                 writeQueue.Clear();
                 if (socket != null)
                 {
-                    disconnected = true;
                     try
                     {
                         socket.Shutdown(SocketShutdown.Both);
@@ -228,6 +248,7 @@ namespace MaskGame
 
         public void End()
         {
+            disconnected = true;
             writeQueue.Stop();
             shouldStop = true;
             Close();

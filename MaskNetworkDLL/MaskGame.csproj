@@ -50,6 +50,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exception\ConnectException.cs" />
+    <Compile Include="Protocol\Schema\Object\Auth\Request.cs" />
+    <Compile Include="Protocol\Schema\Object\Auth\Response.cs" />
     <Compile Include="Queue\BlockingQueue.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="Queue\EventQueue.cs" />
@@ -60,8 +63,10 @@
     <Compile Include="Protocol\Schema\Object\Player.cs" />
     <Compile Include="Protocol\Schema\Object\Vec3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RPC\Buffer.cs" />
     <Compile Include="RPC\Client.cs" />
     <Compile Include="RPC\Meta.cs" />
+    <Compile Include="RPC\Watcher.cs" />
     <Compile Include="Util\ShortId.cs" />
     <Compile Include="Util\Bytes.cs" />
     <Compile Include="Util\Date.cs" />

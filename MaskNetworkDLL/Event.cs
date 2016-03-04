@@ -63,12 +63,21 @@ namespace MaskGame
     {
         public static EventArgs GetArgsFromPacket(Packet packet)
         {
+            /*
             Type type = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(t => t.GetTypes())
                 .Where(t => t.IsClass && t.FullName == packet.Payload.FullName)
                 .Single();
             object payload = type.GetMethod("GetRootAs" + type.Name, new Type[] { typeof(ByteBuffer)}).Invoke(null, new object[]{ new ByteBuffer(packet.Payload.Data)});
-            return new EventArgs(type.FullName, packet.ShortId, payload);
+            */
+            object payload = packet.Payload.Data;
+            return new EventArgs(packet.Payload.FullName, packet.ShortId, payload);
+        }
+
+        public static void PacketHandler(Packet packet)
+        {
+            EventArgs eventArgs = Event.GetArgsFromPacket(packet);
+            EventQueue.GetInstance().Enqueue(eventArgs);
         }
     }
 }
