@@ -1,0 +1,3 @@
+[submodule "MaskNetworkDLL/Protocol/Schema"]
+	path = MaskNetworkDLL/Protocol/Schema
+	url = ssh://gogs@gogs.digif.net:22221/VR/MaskGameSchema.git

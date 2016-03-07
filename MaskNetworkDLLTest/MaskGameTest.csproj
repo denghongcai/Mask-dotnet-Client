@@ -70,6 +70,7 @@
     <Compile Include="EventTest.cs" />
     <Compile Include="PacketTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RPC\ClientTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MaskNetworkDLL\MaskGame.csproj">
