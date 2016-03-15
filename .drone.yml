@@ -1,5 +1,5 @@
 build:
   image: mono:latest
-    commands:
-      - nuget restore
-      - xbuild /p:Configuration="NoUnitTest"
+  commands:
+    - nuget restore
+    - xbuild /p:Configuration="NoUnitTest"
