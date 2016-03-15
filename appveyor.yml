@@ -10,3 +10,7 @@ build:
   project: MaskGame.sln      # path to Visual Studio solution or project
   include_nuget_references: true  # add -IncludeReferencedProjects option while packaging NuGet artifacts
   verbosity: normal
+
+artifacts:
+  - path: MaskNetworkDLL\bin\$(configuration)\*.dll
+    name: Mask-dotnet-Client
