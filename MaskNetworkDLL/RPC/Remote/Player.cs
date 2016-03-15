@@ -41,12 +41,13 @@ namespace MaskGame.RPC.Remote
         /// <summary>
         /// move player
         /// </summary>
-        /// <param name="pos"></param>
-        /// <param name="direction"></param>
+        /// <param name="transform"></param>
         /// <param name="jump"></param>
-        public void Move(Vector3 pos, Vector3 direction, bool jump = false)
+        public void Move(Transform transform, bool jump = false)
         {
             var builder = new FlatBufferBuilder(1);
+            var direction = transform.rotation;
+            var pos = transform.position;
             var posVec3 = Vec3.CreateVec3(builder, pos.x, pos.y, pos.z);
             var directVec3 = Vec3.CreateVec3(builder, direction.x, direction.y, direction.z);
             var id = builder.CreateString(this.id);
