@@ -10,6 +10,6 @@ publish:
     port: 22701
     username: artifacts
     password: artifacts
-    destination_path: /mask-dotnet-client
+    destination_path: /data/mask-dotnet-client
     files:
       - MaskNetworkDLL/bin/NoUnitTest/*.dll
