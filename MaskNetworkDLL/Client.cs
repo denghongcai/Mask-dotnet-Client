@@ -25,6 +25,10 @@ namespace MaskGame
 
         public ReadPacketHandlerDelegate ReadPacketHandler = null;
 
+        public delegate void AfterConnectHandlerDelegate();
+
+        public AfterConnectHandlerDelegate AfterConnectHandler = null;
+
         private string hostName;
 
         private int port = 1430; // default port
@@ -38,6 +42,10 @@ namespace MaskGame
         private BlockingQueue<Packet> writeQueue = new BlockingQueue<Packet>();
 
         private bool disconnected = true;
+        
+        public bool Connected { get { return !disconnected;  } }
+
+        private DateTime lastRetryTime = DateTime.UtcNow;
 
         private int connectRetryTimes = 0;
 
@@ -90,6 +98,10 @@ namespace MaskGame
                 try
                 {
                     socket.Connect(remoteEP);
+                    if(AfterConnectHandler != null)
+                    {
+                        AfterConnectHandler();
+                    }
                     disconnected = false;
                     Debug.Log("socket connected to " + hostName + ":" + port);
                 }
@@ -113,7 +125,7 @@ namespace MaskGame
         {
             if(disconnected == false)
             {
-                Connect();
+                if ((DateTime.UtcNow - lastRetryTime).Seconds > 2) Connect();
             }
         }
 

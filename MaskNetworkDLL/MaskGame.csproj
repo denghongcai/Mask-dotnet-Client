@@ -31,17 +31,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AsyncBridge.Net35, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b3b1c0202c0d6a87, processorArchitecture=MSIL">
-      <HintPath>..\packages\AsyncBridge.Net35.0.2.0\lib\net35-Client\AsyncBridge.Net35.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="FlatBuffers">
       <HintPath>flatbuffer\bin\FlatBuffers.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Threading, Version=1.0.2856.102, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\TaskParallelLibrary.1.0.2856.0\lib\Net35\System.Threading.dll</HintPath>
+    <Reference Include="System.Threading.Tasks.NET35, Version=3.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Unofficial.3.1\lib\net35\System.Threading.Tasks.NET35.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
@@ -51,21 +47,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exception\ConnectException.cs" />
-    <Compile Include="Protocol\Schema\Object\Auth\Request.cs" />
-    <Compile Include="Protocol\Schema\Object\Auth\Response.cs" />
+    <Compile Include="Protocol\Schema\Object\Auth\Login.cs" />
+    <Compile Include="Protocol\Schema\Object\Error.cs" />
+    <Compile Include="Protocol\Schema\Object\Face.cs" />
+    <Compile Include="Protocol\Schema\Object\Player.cs" />
+    <Compile Include="Protocol\Schema\Object\Vec3.cs" />
+    <Compile Include="Protocol\Schema\Object\VoiceSegment.cs" />
     <Compile Include="Queue\BlockingQueue.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="Queue\EventQueue.cs" />
     <Compile Include="Exception\ArgumentLengthNotSatisfiedException.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Protocol\Packet.cs" />
-    <Compile Include="Protocol\Schema\Object\Color.cs" />
-    <Compile Include="Protocol\Schema\Object\Player.cs" />
-    <Compile Include="Protocol\Schema\Object\Vec3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RPC\Buffer.cs" />
-    <Compile Include="RPC\Client.cs" />
+    <Compile Include="RPC\Wrapper.cs" />
     <Compile Include="RPC\Meta.cs" />
+    <Compile Include="RPC\Remote\Auth.cs" />
+    <Compile Include="RPC\Remote\Player.cs" />
     <Compile Include="RPC\Watcher.cs" />
     <Compile Include="Util\ShortId.cs" />
     <Compile Include="Util\Bytes.cs" />

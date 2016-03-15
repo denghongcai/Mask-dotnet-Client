@@ -56,7 +56,7 @@ namespace MaskGameTest.RPC
         [TestMethod]
         public void TestCallAsync()
         {
-            Client.GetInstance().CallAsync("test", new byte[1]).Wait();
+            Wrapper.GetInstance().CallAsync("test", new byte[1]).Wait();
         }
     }
 }

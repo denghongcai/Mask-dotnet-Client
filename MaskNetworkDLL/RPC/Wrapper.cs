@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 
 namespace MaskGame.RPC
 {
-    public class Client
+    public class Wrapper
     {
         //public delegate void CallAsyncDelegate(Meta meta);
 
-        private readonly static Client instance = new Client();
+        private readonly static Wrapper instance = new Wrapper();
 
-        public static Client GetInstance()
+        public static Wrapper GetInstance()
         {
             return instance;
         }
