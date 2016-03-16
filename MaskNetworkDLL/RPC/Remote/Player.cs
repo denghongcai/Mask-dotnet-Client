@@ -60,7 +60,7 @@ namespace MaskGame.RPC.Remote
             var player = Protocol.Schema.Object.Player.EndPlayer(builder);
             Protocol.Schema.Object.Player.FinishPlayerBuffer(builder, player);
 
-            Wrapper.GetInstance().Call("scene." + scene + ".movePlayer", builder.SizedByteArray());
+            Wrapper.GetInstance().CallAsync("scene." + scene + ".MovePlayer", builder.SizedByteArray());
         }
 
         public void Remove()
