@@ -49,13 +49,11 @@ namespace MaskGame.RPC.Remote
             var direction = transform.rotation;
             var pos = transform.position;
             var id = builder.CreateString(this.id);
-            var posVec3 = Vec3.CreateVec3(builder, pos.x, pos.y, pos.z);
-            var directVec3 = Vec3.CreateVec3(builder, direction.x, direction.y, direction.z);
 
             Protocol.Schema.Object.Player.StartPlayer(builder);
 
-            Protocol.Schema.Object.Player.AddPos(builder, posVec3);
-            Protocol.Schema.Object.Player.AddDirection(builder, directVec3);
+            Protocol.Schema.Object.Player.AddPos(builder, Vec3.CreateVec3(builder, pos.x, pos.y, pos.z));
+            Protocol.Schema.Object.Player.AddDirection(builder, Vec3.CreateVec3(builder, direction.x, direction.y, direction.z));
 
             Protocol.Schema.Object.Player.AddId(builder, id);
             Protocol.Schema.Object.Player.AddJump(builder, jump);
