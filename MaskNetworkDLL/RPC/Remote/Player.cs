@@ -32,12 +32,12 @@ namespace MaskGame.RPC.Remote
             get { return scene; }
         }
 
-        public byte[] AddToScene(string scene)
+        public Protocol.Schema.Object.Player AddToScene(string scene)
         {
             var task = Wrapper.GetInstance().Call("scene." + scene + ".AddPlayer");
             this.scene = scene;
 
-            return task.Ret;
+            return Protocol.Schema.Object.Player.GetRootAsPlayer(new ByteBuffer(task.Ret));
         }
 
         /// <summary>
